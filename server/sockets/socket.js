@@ -26,7 +26,13 @@ io.on('connection', (client) => {
         let atenderticket = tickectControl.atenderTicket(data.cajero);
         callback(atenderticket);
 
-        // Actualizar la pantalla
+        client.broadcast.emit('usuarioAtendido', {
+            "ultimos": tickectControl.ultimos4
+        })
 
+    });
+
+    client.emit('usuarioAtendido', {
+        "ultimos": tickectControl.ultimos4
     });
 });
