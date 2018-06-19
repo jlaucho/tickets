@@ -6,8 +6,27 @@ io.on('connection', (client) => {
 
     console.log('Usuario conectado');
 
-    client.on('siguienteTicket', ( ticket )=>{
-        console.log(ticket.numero);
+    client.on('siguienteTicket', (data, callback) => {
+        let siguiente = tickectControl.siguiente();
+        callback(siguiente);
+        console.log(siguiente);
     });
 
+    client.emit('estadoActual', {
+        "numero": tickectControl.getUltimoTicket()
+    });
+
+    client.on('atenderTicket', (data, callback) => {
+        if (!data.cajero) {
+            return callback({
+                error: true,
+                message: 'El Cajero es necesario'
+            });
+        }
+        let atenderticket = tickectControl.atenderTicket(data.cajero);
+        callback(atenderticket);
+
+        // Actualizar la pantalla
+
+    });
 });
